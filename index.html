@@ -1,73 +1,593 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>심리학 핵심 개념 퀴즈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:15px}
-.wrap{padding:12px 0}
-.top-bar{margin-bottom:12px}
-.title{font-size:17px;font-weight:500;margin-bottom:10px}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:10px}
-.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 6px;text-align:center}
-.stat-val{font-size:18px;font-weight:500;display:block;line-height:1.2}
-.stat-lbl{font-size:11px;color:var(--color-text-secondary);display:block;margin-top:2px}
-.pbar{height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden;margin-bottom:12px}
-.pfill{height:100%;background:#3949AB;border-radius:2px;transition:width .4s}
-.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:13px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;min-height:36px;display:flex;align-items:center}
-.tab.active{background:#1A237E;color:#fff;border-color:#1A237E}
-.ch-label{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:10px}
-.q-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-primary);padding:14px;margin-bottom:10px}
-.q-card.answered{border-color:var(--color-border-secondary)}
-.q-top{display:flex;gap:8px;margin-bottom:12px;align-items:flex-start}
-.q-badge{font-size:11px;font-weight:500;color:#5C6BC0;background:#E8EAF6;padding:3px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:1px}
-.q-text{font-size:14px;line-height:1.55;color:var(--color-text-primary)}
-.choices{display:flex;flex-direction:column;gap:7px}
-.choice{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);cursor:pointer;min-height:48px;transition:background .1s,border-color .1s}
-.choice:active:not(.locked){background:var(--color-background-secondary)}
-.c-lbl{font-size:12px;font-weight:500;color:var(--color-text-secondary);min-width:18px;flex-shrink:0;margin-top:1px}
-.c-txt{font-size:13px;line-height:1.5;color:var(--color-text-primary)}
-.choice.correct{background:#E8F5E9;border-color:#2E7D32}
-.choice.correct .c-lbl{color:#2E7D32}
-.choice.correct .c-txt{color:#1B5E20;font-weight:500}
-.choice.wrong{background:#FFEBEE;border-color:#C62828}
-.choice.wrong .c-lbl{color:#C62828}
-.choice.wrong .c-txt{color:#B71C1C}
-.choice.dim{opacity:.4}
-.explain{margin-top:10px;padding:10px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);border-left:3px solid #3949AB;font-size:12.5px;line-height:1.6;color:var(--color-text-secondary);display:none}
-.explain b{color:#1A237E;font-weight:500}
-.chap-wrap{display:none}
-.chap-wrap.active{display:block}
-.score-banner{display:none;padding:20px 16px;border-radius:var(--border-radius-lg);background:var(--color-background-secondary);text-align:center;margin-bottom:12px}
-.score-banner.on{display:block}
-.score-big{font-size:40px;font-weight:500;color:#1A237E;line-height:1.1;margin-bottom:4px}
-.score-sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:14px;line-height:1.5}
-.reset-btn{padding:10px 24px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-size:14px;cursor:pointer;min-height:44px}
+  :root {
+    --ink:       #1a1a2e;
+    --ink-soft:  #2d2d44;
+    --paper:     #f5f0e8;
+    --paper-alt: #ede8dc;
+    --accent:    #c8603a;
+    --accent-l:  #e8845e;
+    --gold:      #b8963e;
+    --gold-l:    #d4b060;
+    --sage:      #4a6741;
+    --sage-l:    #6a8f60;
+    --correct:   #2d6a4f;
+    --correct-bg:#d8f3dc;
+    --wrong:     #9d2a1a;
+    --wrong-bg:  #fde8e4;
+    --dim:       rgba(26,26,46,0.3);
+    --shadow:    0 4px 24px rgba(26,26,46,0.12);
+    --radius:    12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.6;
+  }
+
+  /* ── COVER SCREEN ── */
+  #cover {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  #cover::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 30%, rgba(200,96,58,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 80% 70%, rgba(74,103,65,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 40% at 50% 50%, rgba(184,150,62,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cover-ornament {
+    width: 80px; height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 0 auto 2rem;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .cover-label {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); font-weight: 500;
+    opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+    margin-bottom: 1.5rem;
+  }
+
+  .cover-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(2.2rem, 7vw, 4.5rem);
+    font-weight: 700; line-height: 1.15;
+    color: var(--ink); letter-spacing: -1px;
+    opacity: 0; animation: fadeUp 0.9s 0.4s forwards;
+    margin-bottom: 0.5rem;
+  }
+
+  .cover-title span { color: var(--accent); }
+
+  .cover-sub {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: var(--ink-soft); opacity: 0;
+    animation: fadeUp 0.9s 0.55s forwards;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+
+  .cover-meta {
+    display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;
+    margin-bottom: 3.5rem;
+    opacity: 0; animation: fadeUp 0.9s 0.65s forwards;
+  }
+
+  .cover-meta-item {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+
+  .cover-meta-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 2rem; font-weight: 700; color: var(--accent); line-height: 1;
+  }
+
+  .cover-meta-lbl {
+    font-size: 11px; letter-spacing: 2px; color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+
+  .meta-sep { width: 1px; background: var(--paper-alt); align-self: stretch; }
+
+  .start-btn {
+    padding: 1rem 3rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: none; border-radius: 50px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1rem; font-weight: 500; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.3s;
+    opacity: 0; animation: fadeUp 0.9s 0.75s forwards;
+    position: relative; overflow: hidden;
+  }
+
+  .start-btn::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+
+  .start-btn:hover { background: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(200,96,58,0.3); }
+  .start-btn:hover::after { opacity: 1; }
+  .start-btn:active { transform: translateY(0); }
+
+  /* ── QUIZ APP ── */
+  #app { display: none; }
+
+  /* ── TOP NAV ── */
+  .top-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(245,240,232,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--paper-alt);
+    padding: 0.75rem 1.5rem;
+  }
+
+  .nav-inner {
+    max-width: 720px; margin: 0 auto;
+    display: flex; align-items: center; gap: 1rem;
+  }
+
+  .nav-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px; font-weight: 600; color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .nav-progress {
+    flex: 1;
+    height: 4px; background: var(--paper-alt);
+    border-radius: 2px; overflow: hidden;
+  }
+
+  .nav-progress-fill {
+    height: 100%; background: var(--accent);
+    border-radius: 2px; transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  .nav-score {
+    font-size: 13px; color: var(--ink-soft); white-space: nowrap;
+    display: flex; gap: 10px; align-items: center;
+  }
+
+  .nav-score .cor { color: var(--correct); font-weight: 500; }
+  .nav-score .wro { color: var(--wrong); font-weight: 500; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    max-width: 720px; margin: 1.5rem auto 0;
+    padding: 0 1.5rem;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+
+  .stat-card {
+    background: #fff;
+    border: 1px solid var(--paper-alt);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  .stat-card-val {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.8rem; font-weight: 700; line-height: 1;
+    display: block; margin-bottom: 4px;
+  }
+
+  .stat-card-val.done { color: var(--ink); }
+  .stat-card-val.cor  { color: var(--correct); }
+  .stat-card-val.wro  { color: var(--wrong); }
+  .stat-card-lbl { font-size: 11px; color: var(--ink-soft); letter-spacing: 1px; }
+
+  /* ── CHAPTER TABS ── */
+  .chapter-nav {
+    max-width: 720px; margin: 1.5rem auto 0;
+    padding: 0 1.5rem;
+  }
+
+  .chapter-tabs {
+    display: flex; gap: 6px;
+    overflow-x: auto; padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .chapter-tabs::-webkit-scrollbar { display: none; }
+
+  .ch-tab {
+    flex-shrink: 0;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 1px solid var(--paper-alt);
+    background: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px; cursor: pointer;
+    color: var(--ink-soft);
+    transition: all 0.2s; white-space: nowrap;
+    min-height: 38px;
+  }
+
+  .ch-tab.active {
+    background: var(--ink); color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .ch-tab:not(.active):hover {
+    border-color: var(--ink-soft); color: var(--ink);
+  }
+
+  /* ── QUESTION AREA ── */
+  .q-area {
+    max-width: 720px; margin: 1.5rem auto 0;
+    padding: 0 1.5rem 4rem;
+  }
+
+  .ch-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--paper-alt);
+  }
+
+  .ch-icon { font-size: 1.4rem; }
+
+  .ch-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.1rem; font-weight: 600; color: var(--ink);
+  }
+
+  .ch-count {
+    margin-left: auto;
+    font-size: 12px; color: var(--ink-soft);
+    background: var(--paper-alt);
+    padding: 3px 10px; border-radius: 20px;
+  }
+
+  /* ── Q CARD ── */
+  .q-card {
+    background: #fff;
+    border: 1px solid var(--paper-alt);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    animation: cardIn 0.35s both;
+  }
+
+  .q-card:hover { box-shadow: var(--shadow); }
+  .q-card.answered { border-color: #d0cbc0; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-top {
+    display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-start;
+  }
+
+  .q-num {
+    font-size: 11px; font-weight: 500;
+    color: var(--accent);
+    background: rgba(200,96,58,0.1);
+    padding: 3px 9px; border-radius: 20px;
+    white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  .q-text {
+    font-size: 14px; line-height: 1.6; color: var(--ink);
+    font-weight: 400;
+  }
+
+  /* ── CHOICES ── */
+  .choices { display: flex; flex-direction: column; gap: 8px; }
+
+  .choice {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1.5px solid var(--paper-alt);
+    cursor: pointer;
+    transition: all 0.15s;
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .choice:active:not(.locked) { transform: scale(0.99); }
+
+  .choice:not(.locked):hover {
+    border-color: var(--accent);
+    background: rgba(200,96,58,0.04);
+  }
+
+  .c-lbl {
+    font-size: 12px; font-weight: 700;
+    color: var(--ink-soft);
+    min-width: 20px; flex-shrink: 0;
+    margin-top: 1px; font-family: 'Noto Serif KR', serif;
+  }
+
+  .c-txt { font-size: 13px; line-height: 1.55; color: var(--ink); }
+
+  .choice.correct {
+    background: var(--correct-bg);
+    border-color: var(--correct);
+  }
+  .choice.correct .c-lbl { color: var(--correct); }
+  .choice.correct .c-txt { color: var(--correct); font-weight: 500; }
+
+  .choice.wrong {
+    background: var(--wrong-bg);
+    border-color: var(--wrong);
+  }
+  .choice.wrong .c-lbl { color: var(--wrong); }
+  .choice.wrong .c-txt { color: var(--wrong); }
+
+  .choice.dim { opacity: 0.35; pointer-events: none; }
+
+  /* ── EXPLAIN ── */
+  .explain {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 14px;
+    background: #f9f7f3;
+    border-radius: 8px;
+    border-left: 3px solid var(--gold);
+    font-size: 12.5px; line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  .explain .e-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    color: var(--gold); display: block; margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+
+  /* ── SCORE SCREEN ── */
+  #score-screen {
+    display: none;
+    max-width: 720px; margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+    text-align: center;
+    animation: fadeUp 0.6s both;
+  }
+
+  .score-ornament {
+    width: 60px; height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 0 auto 1.5rem;
+  }
+
+  .score-label {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1rem;
+  }
+
+  .score-big {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(4rem, 15vw, 7rem);
+    font-weight: 700; line-height: 1;
+    color: var(--ink); margin-bottom: 0.5rem;
+  }
+
+  .score-big span { color: var(--accent); }
+
+  .score-fraction {
+    font-size: 1rem; color: var(--ink-soft); margin-bottom: 1rem;
+  }
+
+  .score-msg {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.2rem; color: var(--ink-soft);
+    margin-bottom: 2.5rem; line-height: 1.5;
+  }
+
+  .score-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    max-width: 400px; margin: 0 auto 2.5rem;
+  }
+
+  .sg-card {
+    background: #fff; border: 1px solid var(--paper-alt);
+    border-radius: var(--radius); padding: 16px 10px; text-align: center;
+  }
+
+  .sg-val {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.6rem; font-weight: 700; display: block; margin-bottom: 4px;
+  }
+
+  .sg-lbl { font-size: 11px; color: var(--ink-soft); }
+
+  .score-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  .btn-primary {
+    padding: 0.9rem 2.5rem;
+    background: var(--ink); color: var(--paper);
+    border: none; border-radius: 50px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.95rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+  }
+
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+
+  .btn-ghost {
+    padding: 0.9rem 2.5rem;
+    background: transparent; color: var(--ink);
+    border: 1.5px solid var(--paper-alt);
+    border-radius: 50px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 0.95rem; font-weight: 400;
+    cursor: pointer; transition: all 0.2s;
+  }
+
+  .btn-ghost:hover { border-color: var(--ink); }
+
+  /* ── CHAPTER SECTION ── */
+  .chap-section { display: none; }
+  .chap-section.active { display: block; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--paper); }
+  ::-webkit-scrollbar-thumb { background: var(--paper-alt); border-radius: 3px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 500px) {
+    .top-nav { padding: 0.6rem 1rem; }
+    .nav-title { font-size: 13px; }
+    .stats-bar, .chapter-nav, .q-area { padding-left: 1rem; padding-right: 1rem; }
+    .q-card { padding: 16px; }
+    .cover-meta { gap: 1.2rem; }
+    .score-grid { max-width: 300px; }
+  }
+
+  /* ── EMPTY STATE ── */
+  #chap-placeholder { display: none; }
 </style>
+</head>
+<body>
 
-<div class="wrap">
-  <div class="top-bar">
-    <div class="title">심리학 객관식 문제집</div>
-    <div class="stats">
-      <div class="stat"><span class="stat-val" id="s-done">0</span><span class="stat-lbl">푼 문제</span></div>
-      <div class="stat"><span class="stat-val" style="color:#2E7D32" id="s-cor">0</span><span class="stat-lbl">정답</span></div>
-      <div class="stat"><span class="stat-val" style="color:#C62828" id="s-wro">0</span><span class="stat-lbl">오답</span></div>
+<!-- ════════════════ COVER ════════════════ -->
+<div id="cover">
+  <div class="cover-ornament"></div>
+  <div class="cover-label">Psychology · 2025</div>
+  <h1 class="cover-title">심리학<br><span>핵심 개념</span> 퀴즈</h1>
+  <p class="cover-sub">8개 챕터 · 74문항 · 정답 및 해설 수록</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <span class="cover-meta-num">74</span>
+      <span class="cover-meta-lbl">문항</span>
     </div>
-    <div class="pbar"><div class="pfill" id="prog" style="width:0%"></div></div>
+    <div class="meta-sep"></div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-num">8</span>
+      <span class="cover-meta-lbl">챕터</span>
+    </div>
+    <div class="meta-sep"></div>
+    <div class="cover-meta-item">
+      <span class="cover-meta-num">4</span>
+      <span class="cover-meta-lbl">보기</span>
+    </div>
+  </div>
+  <button class="start-btn" onclick="startQuiz()">시작하기</button>
+</div>
+
+<!-- ════════════════ APP ════════════════ -->
+<div id="app">
+
+  <!-- TOP NAV -->
+  <nav class="top-nav">
+    <div class="nav-inner">
+      <span class="nav-title">심리학 퀴즈</span>
+      <div class="nav-progress">
+        <div class="nav-progress-fill" id="nav-prog"></div>
+      </div>
+      <div class="nav-score">
+        <span class="cor" id="nav-cor">✓ 0</span>
+        <span class="wro" id="nav-wro">✗ 0</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <span class="stat-card-val done" id="s-done">0</span>
+      <span class="stat-card-lbl">/ 74 풀었어요</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-val cor" id="s-cor">0</span>
+      <span class="stat-card-lbl">정답</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-card-val wro" id="s-wro">0</span>
+      <span class="stat-card-lbl">오답</span>
+    </div>
   </div>
 
-  <div id="score-banner" class="score-banner">
-    <div class="score-big" id="sc-pct"></div>
-    <div class="score-sub" id="sc-msg"></div>
-    <button class="reset-btn" onclick="resetAll()">처음부터 다시 풀기</button>
+  <!-- CHAPTER TABS -->
+  <div class="chapter-nav">
+    <div class="chapter-tabs" id="ch-tabs"></div>
   </div>
 
-  <div class="tabs" id="tabs"></div>
-  <div id="chapters"></div>
+  <!-- QUESTION AREA -->
+  <div class="q-area" id="q-area"></div>
+
+  <!-- SCORE SCREEN -->
+  <div id="score-screen">
+    <div class="score-ornament"></div>
+    <div class="score-label">결과 발표</div>
+    <div class="score-big" id="sc-big"><span id="sc-pct">0</span>점</div>
+    <div class="score-fraction" id="sc-frac">0 / 74 정답</div>
+    <div class="score-msg" id="sc-msg"></div>
+    <div class="score-grid">
+      <div class="sg-card">
+        <span class="sg-val" style="color:var(--ink)" id="sg-done">0</span>
+        <span class="sg-lbl">풀었어요</span>
+      </div>
+      <div class="sg-card">
+        <span class="sg-val" style="color:var(--correct)" id="sg-cor">0</span>
+        <span class="sg-lbl">정답</span>
+      </div>
+      <div class="sg-card">
+        <span class="sg-val" style="color:var(--wrong)" id="sg-wro">0</span>
+        <span class="sg-lbl">오답</span>
+      </div>
+    </div>
+    <div class="score-actions">
+      <button class="btn-primary" onclick="resetAll()">처음부터 다시</button>
+      <button class="btn-ghost" onclick="goReview()">오답 복습</button>
+    </div>
+  </div>
+
 </div>
 
 <script>
-const Q=[
-  {ch:"🧠 심리학의 기초",qs:[
+const QUIZZES = [
+  {ch:"심리학의 기초", icon:"🧠", qs:[
     {q:"심리학의 정의로 가장 적절한 것은?",cs:["인간의 뇌 구조와 신경계를 연구하는 학문","인간의 행동과 정신 과정을 과학적으로 연구하여 삶의 질을 향상시키는 학문","사회 집단의 행동 패턴을 분석하는 학문","철학적 사유를 통해 인간 본성을 탐구하는 학문"],a:1,e:"심리학은 '행동'과 '정신 과정(마음)' 두 가지를 과학적으로 연구하는 학문입니다."},
     {q:"심리학이 과학으로서 갖춰야 할 3가지 조건을 모두 올바르게 묶은 것은?",cs:["관찰 가능, 측정 가능, 반복 가능","관찰 가능, 예측 가능, 통제 가능","측정 가능, 수정 가능, 적용 가능","반복 가능, 검증 가능, 수량화 가능"],a:0,e:"심리학의 과학적 조건: 관찰 가능(Observable) + 측정 가능(Measurable) + 반복 가능(Replicable)"},
     {q:"실험실 관찰법의 '단점'으로 가장 적절한 것은?",cs:["행동에 대한 예측이 어렵다","변수를 통제하기 어렵다","실생활 적용(생태학적 타당도)에 무리가 있다","반복 실험이 불가능하다"],a:2,e:"실험실은 인위적 환경이므로 실제 생활에 직접 적용하기 어려운 '생태학적 타당도' 문제가 발생합니다."},
@@ -75,12 +595,12 @@ const Q=[
     {q:"비판적 사고의 특징으로 적절하지 않은 것은?",cs:["증거를 요구하고 주장의 가정·전제를 파악한다","개인적 일화를 그대로 신뢰한다","과잉 단순화와 과잉 일반화를 피한다","연구 증거를 다양한 관점에서 고려한다"],a:1,e:"비판적 사고는 개인적 일화에 의심을 갖는 것을 포함합니다. 일화를 그대로 신뢰하는 것은 비판적 사고에 반합니다."},
     {q:"심리학 연구자가 갖춰야 할 기본 자세는?",cs:["귀납적 사고","연역적 사고","비판적 사고","창의적 사고"],a:2,e:"비판적 사고: 어떤 현상이나 주장에 대해 '왜?'라고 묻고 근거를 탐색하는 태도입니다."},
   ]},
-  {ch:"📚 학습의 기초",qs:[
+  {ch:"학습의 기초", icon:"📚", qs:[
     {q:"학습의 정의에 포함되지 않는 것은?",cs:["환경과의 상호작용을 통한 변화","비교적 일관성 있는 변화","약물에 의한 행동 변화","후천적으로 획득되는 능력"],a:2,e:"약물·신체 성장에 의한 변화, 감정·피로·질병으로 인한 일시적 변화는 학습에서 제외됩니다."},
     {q:"학습의 기본 원리인 '연합'의 정의로 옳은 것은?",cs:["두 가지 이상의 자극이 동시에 제거되는 현상","한 사건과 다른 사건의 연결","조건 반응이 소거되는 현상","유기체가 환경을 회피하는 과정"],a:1,e:"연합(Association)은 '한 사건과 다른 사건의 연결'로, 고전적·조작적 조건형성의 기본 원리입니다."},
     {q:"학습의 연합 형성 과정에 해당하지 않는 것은?",cs:["고전적 조건형성","조작적 조건형성","인지학습","본능적 반응"],a:3,e:"연합의 형성 과정은 고전적 조건형성, 조작적 조건형성, 인지학습 세 가지입니다. 본능적 반응은 선천적 행동입니다."},
   ]},
-  {ch:"🔔 고전적 조건형성",qs:[
+  {ch:"고전적 조건형성", icon:"🔔", qs:[
     {q:"고전적 조건형성에서 '무조건 자극(UCS)'이란?",cs:["학습을 통해 반응을 유발하게 된 자극","아무 반응도 일으키지 않는 자극","자동적 반사 반응을 일으키는 자극","조건 반응과 연합된 중성 자극"],a:2,e:"무조건 자극(UCS)은 학습 없이도 자동적으로 반사 반응을 일으키는 자극입니다. 예: 음식 → 침 분비"},
     {q:"파블로프 실험에서 학습 전 '종소리'는 무엇에 해당하는가?",cs:["무조건 자극(UCS)","조건 자극(CS)","중성 자극(NS)","조건 반응(CR)"],a:2,e:"학습 전 종소리는 개에게 아무런 반응을 일으키지 않는 '중성 자극(NS)'입니다. 음식과 반복 연합 후 '조건 자극(CS)'이 됩니다."},
     {q:"파블로프 실험에서 '조건 반응(CR)'이란?",cs:["음식을 보고 침을 흘리는 반응","종소리에 의해 학습된 침 분비 반응","아무 자극 없이 나타나는 자발적 반응","조건 자극을 회피하는 반응"],a:1,e:"조건 반응(CR)은 조건 자극(CS=종소리)에 의해 학습된 반응입니다. 무조건 반응(UCR)과 유사하나 강도가 약합니다."},
@@ -91,7 +611,7 @@ const Q=[
     {q:"'자극 변별(Stimulus Discrimination)'을 가장 잘 설명하는 것은?",cs:["유사 자극 모두에 조건 반응을 보이는 것","조건 자극과 유사한 자극을 구분하여 특정 CS에만 반응하는 것","소거 후 반응이 회복되는 것","처음보다 더 강한 반응이 형성되는 것"],a:1,e:"자극 변별: 종소리와 부저 소리를 구분하여 종소리에만 CR을 보이는 것처럼, 유사 자극을 변별하여 반응하는 현상입니다."},
     {q:"고전적 조건형성에서 조건형성의 순서로 옳은 것은?",cs:["UCS→UCR / NS+UCS→CR / CS→CR","NS→CR / UCS→UCR / CS→CR","CS→UCR / NS→UCS / CR→CS","UCR→UCS / CR→CS / NS→UCR"],a:0,e:"① UCS→UCR(기본 반사) ② NS+UCS 반복 연합→CR 형성 ③ 이후 CS(구 NS)만으로 CR 유발"},
   ]},
-  {ch:"⚙️ 조작적 조건형성",qs:[
+  {ch:"조작적 조건형성", icon:"⚙️", qs:[
     {q:"조작적 조건형성이 고전적 조건형성과 다른 점은?",cs:["자극과 반응의 연합이 없다","유기체가 수동적으로 반응한다","유기체의 자발적 행동과 그 결과가 연합된다","무조건 자극이 핵심 역할을 한다"],a:2,e:"조작적 조건형성은 유기체가 스스로 시작하는 '자발적 행동(조작행동)'과 그 결과의 연합으로 이후 행동이 결정됩니다."},
     {q:"스키너 상자 실험에서 '조성(Shaping)'이란?",cs:["원하는 행동을 강제로 시키는 것","원하는 행동을 점진적으로 유도하여 형성하는 과정","불필요한 행동을 처벌로 제거하는 것","자연 발생적 행동을 관찰하는 것"],a:1,e:"조성(Shaping): 목표 행동에 점차 가까워지는 행동에 강화를 주어 원하는 행동을 단계적으로 형성하는 방법입니다."},
     {q:"다음 중 '정적 강화(Positive Reinforcement)'에 해당하는 예시는?",cs:["숙제를 하면 TV 시청을 허락해준다","지각하면 벌점을 준다","두통이 있을 때 약을 먹어 두통이 사라진다","게임을 하면 게임기를 압수한다"],a:0,e:"정적 강화: 좋은 자극을 추가하여 행동을 증가시킵니다. 숙제→TV 허락은 원하는 보상을 추가한 것입니다."},
@@ -102,7 +622,7 @@ const Q=[
     {q:"조작적 조건형성에서 학습 효과가 가장 뛰어난 방법은?",cs:["부적 처벌","정적 처벌","정적 강화","부적 강화"],a:2,e:"정적 강화(좋은 자극 추가)가 4가지 강화·처벌 유형 중 학습 효과가 가장 뛰어납니다."},
     {q:"조작적 조건형성에서 '강화물(Reinforcer)'의 정의는?",cs:["행동의 빈도나 강도를 감소시키는 자극","행동의 빈도나 강도를 증가시키는 자극","조건 반응을 소거시키는 자극","유기체에게 아무런 영향을 미치지 않는 자극"],a:1,e:"강화물은 어떤 행동 다음에 제시되어 그 행동의 빈도나 강도를 증가시키는 자극입니다."},
   ]},
-  {ch:"💬 언어심리학",qs:[
+  {ch:"언어심리학", icon:"💬", qs:[
     {q:"언어에서 '음소(Phoneme)'란?",cs:["의미를 가진 가장 작은 언어 단위","언어에서 의미를 구분하는 가장 작은 소리 단위","단어들의 배열 규칙","문장의 의미를 전달하는 단위"],a:1,e:"음소(Phoneme): 의미를 구분하는 가장 작은 소리 단위. 예: /ㄱ/과 /ㄴ/은 다른 음소로 '가'와 '나'를 구분."},
     {q:"'형태소(Morpheme)'에 대한 설명으로 옳은 것은?",cs:["가장 작은 소리의 단위","문장을 구성하는 규칙","의미를 가진 가장 작은 언어 단위","단어와 단어 사이의 관계"],a:2,e:"형태소(Morpheme): 의미를 가진 가장 작은 단위. 예: '먹었다' = '먹-'(어근) + '-었-'(과거) + '-다'(종결)"},
     {q:"언어 발달을 '모방과 강화'로 설명한 학자는?",cs:["촘스키 (Chomsky)","피아제 (Piaget)","스키너 (Skinner)","가드너 (Gardner)"],a:2,e:"스키너: 아이들이 부모의 말을 모방하고 칭찬(강화)을 받으면서 언어를 학습한다고 봤습니다."},
@@ -112,7 +632,7 @@ const Q=[
     {q:"'개념'에 대한 설명으로 옳은 것은?",cs:["단순한 감각 경험의 총합","위계적 또는 연결망 구조의 범주에 속해 있음","언어와 무관한 순수 인지 과정","반복 학습으로만 형성되는 정보"],a:1,e:"개념은 위계적·연결망 구조로 구성됩니다. 예: '새'는 동물의 하위, 참새·펭귄의 상위 범주."},
     {q:"의사결정(Decision Making)의 정의로 옳은 것은?",cs:["문제를 분석하여 원인을 파악하는 과정","여러 대안 중 하나를 선택하는 과정","주어진 정보를 기억하는 과정","감정에 따라 행동을 조절하는 과정"],a:1,e:"의사결정: 여러 가지 대안 중 하나를 선택하는 과정. 예: 냉장고 구매 시 가격·크기·색상 등을 비교 후 선택."},
   ]},
-  {ch:"🧩 지능 이론",qs:[
+  {ch:"지능 이론", icon:"🧩", qs:[
     {q:"지능의 정의로 가장 포괄적인 것은?",cs:["IQ 검사로 측정되는 수치","수리·언어 능력의 합산 점수","추상적 사고, 낯선 환경 적응, 합리적 사고로 환경을 활용하는 능력","암기력과 집중력의 총합"],a:2,e:"지능의 정의: 추상적 사고 + 낯선 환경 적응 + 목적을 가진 합리적 사고로 환경을 활용하는 능력."},
     {q:"가드너(Gardner)의 '다중지능이론'에서 지능의 특징은?",cs:["지능은 하나의 단일한 일반 요인(g)으로 구성된다","지능은 분석·창의·실용의 세 유형으로 나뉜다","지능은 다양하고 특수한 여러 가지 지능들을 포함한다","지능은 경험과 유전의 합산으로 결정된다"],a:2,e:"가드너의 다중지능이론: 지능은 단일하지 않고 언어·음악·논리수리·공간·신체운동·대인관계·개인이해 등 다양한 지능으로 구성됩니다."},
     {q:"가드너의 다중지능에 해당하지 않는 것은?",cs:["음악적 지능","대인관계적 지능","논리수리적 지능","감정조절 지능"],a:3,e:"가드너의 7가지 지능: 언어·음악·논리수리·공간·신체운동·대인관계·개인이해(자기성찰). '감정조절 지능'은 포함되지 않습니다."},
@@ -122,7 +642,7 @@ const Q=[
     {q:"'정서 지능(Emotional Intelligence)'의 핵심 능력이 아닌 것은?",cs:["자신의 정서를 점검하는 능력","타인의 정서를 변별하는 능력","정서를 활용해 사고·행동을 이끄는 능력","IQ 검사에서 높은 점수를 받는 능력"],a:3,e:"정서지능(EQ)은 ① 자신·타인 정서 인식 ② 정서 변별 ③ 정서를 사고·행동에 활용하는 능력입니다. IQ와는 다릅니다."},
     {q:"'모든 지적 과제의 기저에 공통적인 일반 지능(g요인)이 존재한다'는 이론은?",cs:["다중지능이론","삼원지능이론","일반요인이론 (스피어만)","정서지능이론"],a:2,e:"스피어만의 일반요인이론(g요인): 모든 지능 검사 수행의 기저에 공통적인 일반 지능(g)이 있다고 주장했습니다."},
   ]},
-  {ch:"👶 발달심리학",qs:[
+  {ch:"발달심리학", icon:"👶", qs:[
     {q:"발달심리학의 연구 대상으로 옳은 것은?",cs:["아동기의 인지 발달만을 연구","인간의 전 생애에 걸친 신체·인지·정서의 변화","노인의 신체적 쇠퇴 현상만을 연구","청소년기의 정서 변화만을 연구"],a:1,e:"발달심리학은 출생부터 사망까지 인간의 전 생애에 걸친 신체·인지·정서의 변화를 연구합니다."},
     {q:"피아제의 인지발달 4단계를 순서대로 옳게 나열한 것은?",cs:["감각운동기→전조작기→구체적조작기→형식적조작기","전조작기→감각운동기→형식적조작기→구체적조작기","구체적조작기→전조작기→감각운동기→형식적조작기","감각운동기→구체적조작기→전조작기→형식적조작기"],a:0,e:"피아제의 4단계: ①감각운동기(0~2세) → ②전조작기(2~7세) → ③구체적조작기(7~11세) → ④형식적조작기(12세~)"},
     {q:"피아제의 '감각운동기(0~2세)'의 주요 발달 과업은?",cs:["보존 개념의 획득","연역적 추론의 발달","대상 영속성의 획득","자기중심적 사고의 극복"],a:2,e:"감각운동기(0~2세): 감각 경험으로 세상 탐색, '대상 영속성(눈에 안 보여도 사물은 존재한다)'의 획득이 핵심 과업."},
@@ -140,7 +660,7 @@ const Q=[
     {q:"피아제의 '타율적 도덕성'의 특징은?",cs:["규칙은 사회 합의로 만들어지며 바뀔 수 있다고 인식","규칙은 절대 권위자가 만들며 어기면 반드시 벌 받는다고 믿음","결과보다 의도를 중심으로 도덕 판단","옳고 그름을 일관성 있게 판단하지 못함"],a:1,e:"타율적 도덕성: 규칙 = 절대 권위자 제정, 위반 = 반드시 처벌. 결과 중심적 판단이 특징입니다."},
     {q:"피아제의 '자율적 도덕성'의 특징으로 옳은 것은?",cs:["규칙을 어기면 반드시 처벌받는다고 믿음","결과만을 중심으로 도덕 판단","사회적 합의로 규칙이 정해지며 상황에 따라 바뀔 수 있음을 이해","옳고 그름을 전혀 구분하지 못함"],a:2,e:"자율적 도덕성: 규칙은 사회적 합의로 정해지며, 상황에 따라 바뀔 수 있다는 것을 이해. 의도 중심적 판단."},
   ]},
-  {ch:"❤️ 동기 이론",qs:[
+  {ch:"동기와 정서", icon:"❤️", qs:[
     {q:"동기(Motivation)의 어원과 의미로 옳은 것은?",cs:["그리스어 'logos(이성)'에서 파생 — 이성적 판단","라틴어 'motus(움직이다)'에서 파생 — 행동을 움직이게 하는 힘","프랑스어 'motif(이유)'에서 파생 — 행동의 이유","독일어 'Motiv(주제)'에서 파생 — 행동의 주제"],a:1,e:"동기(Motivation)의 어원: 라틴어 'motus(움직이다)'에서 파생. 무엇을 움직이게 하는 근원적 힘."},
     {q:"동기의 3가지 구성 요소를 순서대로 옳게 나열한 것은?",cs:["지속성→강도→활성화","강도→활성화→지속성","활성화→강도→지속성","활성화→지속성→강도"],a:2,e:"동기의 3요소: 활성화(행동 시작) → 강도(행동의 세기·방향) → 지속성(행동 유지)."},
     {q:"'내적 동기(Intrinsic Motivation)'에 해당하는 것은?",cs:["돈을 받기 위해 일한다","학점을 높이기 위해 공부한다","순수한 호기심과 흥미로 탐구한다","타인의 인정을 받기 위해 노력한다"],a:2,e:"내적 동기: 호기심·흥미·도전·의지 등 내부에서 자발적으로 일어나는 동기. 외적 보상과 무관합니다."},
@@ -149,8 +669,6 @@ const Q=[
     {q:"매슬로우 욕구 위계에서 '자아실현의 욕구'는 몇 번째 단계인가?",cs:["2단계","3단계","4단계","5단계"],a:3,e:"매슬로우 5단계: 생리→안전→소속·애정→인정·존중→자아실현. 자아실현은 최상위 5단계입니다."},
     {q:"매슬로우 이론에서 욕구 충족의 원칙은?",cs:["상위 욕구부터 충족해야 한다","하위 욕구가 충족되어야 상위 욕구를 추구한다","모든 욕구는 동시에 충족될 수 있다","욕구 사이에는 위계가 없다"],a:1,e:"매슬로우: 하위 욕구(생존·안전)가 먼저 충족되어야 상위 욕구(소속·존중·자아실현)를 추구하게 됩니다."},
     {q:"매슬로우 욕구 5단계를 순서대로 옳게 나열한 것은?",cs:["생리→안전→소속·애정→인정·존중→자아실현","안전→생리→소속·애정→인정·존중→자아실현","생리→소속·애정→안전→인정·존중→자아실현","인정·존중→소속·애정→안전→생리→자아실현"],a:0,e:"매슬로우 5단계: ①생리적 욕구 → ②안전·안정 → ③소속감·애정 → ④인정·존중·존경 → ⑤자아실현"},
-  ]},
-  {ch:"😊 정서 이론",qs:[
     {q:"정서의 개념으로 가장 포괄적인 것은?",cs:["단순한 기분 상태","얼굴 표정·신체 변화·인지적 평가·주관적 느낌을 포함하는 복잡한 감정 상태","생리적 각성 반응만을 의미하는 것","외부 자극에 대한 단순 반사"],a:1,e:"정서: 얼굴 표정, 신체 변화, 인지적 평가, 주관적 느낌을 포함하는 다양하고 복잡한 감정 상태."},
     {q:"'제임스-랑게 이론'의 정서 발생 순서는?",cs:["자극→정서→생리적 각성","자극→생리적 각성→정서 지각","자극→인지 평가→생리적 각성→정서","자극→생리적 각성+정서 지각(동시)"],a:1,e:"제임스-랑게: 자극 → 신체(생리)가 먼저 반응 → 그 신체 반응을 인식하여 정서 경험. '우리가 울어서 슬프다.'"},
     {q:"'캐논-바드 이론'이 제임스-랑게 이론과 다른 점은?",cs:["인지 평가를 정서의 주요 요인으로 본다","생리적 각성과 정서 지각이 동시에 발생한다고 본다","신체 반응이 정서보다 먼저 발생한다고 본다","정서는 학습을 통해서만 형성된다고 본다"],a:1,e:"캐논-바드: 자극 → 생리적 각성과 정서 지각이 동시에 발생. 뇌(시상)에서 두 반응이 동시에 시작됩니다."},
@@ -161,112 +679,165 @@ const Q=[
   ]},
 ];
 
-const LBL=['①','②','③','④'];
-const TOTAL=Q.reduce((s,c)=>s+c.qs.length,0);
-let st={},done=0,cor=0,wro=0;
+const LBL = ['①','②','③','④'];
+const TOTAL = QUIZZES.reduce((s,c)=>s+c.qs.length,0);
+let state = {}, done = 0, cor = 0, wro = 0, curCh = 0, reviewMode = false;
 
-function upd(){
-  document.getElementById('s-done').textContent=done;
-  document.getElementById('s-cor').textContent=cor;
-  document.getElementById('s-wro').textContent=wro;
-  document.getElementById('prog').style.width=Math.round(done/TOTAL*100)+'%';
-  if(done===TOTAL){
-    const pct=Math.round(cor/TOTAL*100);
-    document.getElementById('sc-pct').textContent=pct+'점';
-    const msgs=[[90,'완벽해요! 시험 걱정 없겠어요!'],[70,'잘 하셨어요! 틀린 문제만 복습하면 완벽!'],[50,'절반 이상! 조금 더 복습해봐요.'],[0,'다시 한 번 도전해봐요! 할 수 있어요!']];
-    document.getElementById('sc-msg').textContent=msgs.find(([t])=>pct>=t)[1];
-    document.getElementById('score-banner').classList.add('on');
-  }
-}
-
-function pick(ci,qi,sel){
-  const k=ci+'-'+qi;
-  if(st[k]!==undefined)return;
-  st[k]=sel;
-  done++;
-  if(sel===Q[ci].qs[qi].a)cor++;else wro++;
-  upd();
-  render(ci,qi);
-}
-
-function render(ci,qi){
-  const k=ci+'-'+qi;
-  const card=document.getElementById('c-'+k);
-  if(!card)return;
-  const q=Q[ci].qs[qi];
-  const picked=st[k];
-  const ans=picked!==undefined;
-  card.querySelectorAll('.choice').forEach((el,i)=>{
-    el.classList.remove('correct','wrong','dim');
-    if(ans){
-      if(i===q.a)el.classList.add('correct');
-      else if(i===picked)el.classList.add('wrong');
-      else el.classList.add('dim');
-      el.style.cursor='default';
-    }
-  });
-  const ex=card.querySelector('.explain');
-  if(ex)ex.style.display=ans?'block':'none';
-  card.classList.toggle('answered',ans);
-}
-
-function switchTab(ci){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.chap-wrap').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+ci).classList.add('active');
-  document.getElementById('ch-'+ci).classList.add('active');
-}
-
-function build(){
-  const tabsEl=document.getElementById('tabs');
-  const chapEl=document.getElementById('chapters');
-  tabsEl.innerHTML='';chapEl.innerHTML='';
-  let gn=0;
-  Q.forEach((ch,ci)=>{
-    const tb=document.createElement('button');
-    tb.className='tab'+(ci===0?' active':'');
-    tb.textContent=ch.ch;
-    tb.id='tab-'+ci;
-    tb.onclick=()=>switchTab(ci);
-    tabsEl.appendChild(tb);
-
-    const wrap=document.createElement('div');
-    wrap.className='chap-wrap'+(ci===0?' active':'');
-    wrap.id='ch-'+ci;
-    const lbl=document.createElement('div');
-    lbl.className='ch-label';
-    lbl.textContent=ch.ch+' — '+ch.qs.length+'문항';
-    wrap.appendChild(lbl);
-
-    ch.qs.forEach((q,qi)=>{
-      gn++;
-      const card=document.createElement('div');
-      card.className='q-card';
-      card.id='c-'+ci+'-'+qi;
-      const choicesHTML=q.cs.map((c,i)=>
-        `<div class="choice" ontouchstart="" onclick="pick(${ci},${qi},${i})">
-          <span class="c-lbl">${LBL[i]}</span>
-          <span class="c-txt">${c}</span>
-        </div>`).join('');
-      card.innerHTML=`
-        <div class="q-top">
-          <span class="q-badge">Q${gn}</span>
-          <span class="q-text">${q.q}</span>
-        </div>
-        <div class="choices">${choicesHTML}</div>
-        <div class="explain"><b>정답 ${LBL[q.a]}</b> &nbsp;${q.e}</div>`;
-      wrap.appendChild(card);
-    });
-    chapEl.appendChild(wrap);
-  });
-}
-
-function resetAll(){
-  st={};done=0;cor=0;wro=0;
-  document.getElementById('score-banner').classList.remove('on');
-  upd();build();
+function startQuiz() {
+  document.getElementById('cover').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  build();
   window.scrollTo(0,0);
 }
 
-build();upd();
+function upd() {
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-cor').textContent  = cor;
+  document.getElementById('s-wro').textContent  = wro;
+  document.getElementById('nav-cor').textContent = '✓ ' + cor;
+  document.getElementById('nav-wro').textContent = '✗ ' + wro;
+  document.getElementById('nav-prog').style.width = Math.round(done/TOTAL*100)+'%';
+
+  if (done === TOTAL) showScore();
+}
+
+function showScore() {
+  document.getElementById('q-area').style.display = 'none';
+  const ss = document.getElementById('score-screen');
+  ss.style.display = 'block';
+  const pct = Math.round(cor/TOTAL*100);
+  document.getElementById('sc-pct').textContent   = pct;
+  document.getElementById('sc-frac').textContent  = cor + ' / ' + TOTAL + ' 정답';
+  document.getElementById('sg-done').textContent  = done;
+  document.getElementById('sg-cor').textContent   = cor;
+  document.getElementById('sg-wro').textContent   = wro;
+  const msgs = [
+    [90,'완벽해요!\n시험 걱정 없겠어요.'],
+    [70,'잘 하셨어요!\n틀린 문제만 복습하면 완벽!'],
+    [50,'절반 이상!\n조금 더 복습해봐요.'],
+    [0,'다시 한 번 도전해봐요!\n할 수 있어요.']
+  ];
+  document.getElementById('sc-msg').textContent = msgs.find(([t])=>pct>=t)[1];
+  ss.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function goReview() {
+  reviewMode = true;
+  document.getElementById('score-screen').style.display = 'none';
+  document.getElementById('q-area').style.display = 'block';
+  switchCh(0);
+  window.scrollTo(0,0);
+}
+
+function pick(ci, qi, sel) {
+  const k = ci+'-'+qi;
+  if (state[k] !== undefined) return;
+  state[k] = sel;
+  done++;
+  if (sel === QUIZZES[ci].qs[qi].a) cor++; else wro++;
+  upd();
+  renderCard(ci, qi);
+}
+
+function renderCard(ci, qi) {
+  const k   = ci+'-'+qi;
+  const card = document.getElementById('card-'+k);
+  if (!card) return;
+  const q   = QUIZZES[ci].qs[qi];
+  const ans  = state[k];
+  const done = ans !== undefined;
+  card.classList.toggle('answered', done);
+  card.querySelectorAll('.choice').forEach((el,i)=>{
+    el.classList.remove('correct','wrong','dim');
+    if (done) {
+      if (i===q.a)        el.classList.add('correct');
+      else if (i===ans)   el.classList.add('wrong');
+      else                el.classList.add('dim');
+      el.style.cursor = 'default';
+    }
+  });
+  const ex = card.querySelector('.explain');
+  if (ex) ex.style.display = done ? 'block' : 'none';
+}
+
+function switchCh(ci) {
+  curCh = ci;
+  document.querySelectorAll('.ch-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.chap-section').forEach(s=>s.classList.remove('active'));
+  const tab = document.getElementById('cht-'+ci);
+  const sec = document.getElementById('sec-'+ci);
+  if (tab) tab.classList.add('active');
+  if (sec) sec.classList.add('active');
+  sec.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function build() {
+  const tabsEl = document.getElementById('ch-tabs');
+  const areaEl = document.getElementById('q-area');
+  tabsEl.innerHTML = ''; areaEl.innerHTML = '';
+  let gn = 0;
+
+  QUIZZES.forEach((ch, ci) => {
+    // Tab
+    const tb = document.createElement('button');
+    tb.className = 'ch-tab' + (ci===0?' active':'');
+    tb.id = 'cht-'+ci;
+    tb.innerHTML = `<span style="font-size:14px">${ch.icon}</span> ${ch.ch}`;
+    tb.onclick = () => switchCh(ci);
+    tabsEl.appendChild(tb);
+
+    // Section
+    const sec = document.createElement('div');
+    sec.className = 'chap-section' + (ci===0?' active':'');
+    sec.id = 'sec-'+ci;
+
+    // Header
+    const hdr = document.createElement('div');
+    hdr.className = 'ch-header';
+    hdr.innerHTML = `
+      <span class="ch-icon">${ch.icon}</span>
+      <span class="ch-name">${ch.ch}</span>
+      <span class="ch-count">${ch.qs.length}문항</span>`;
+    sec.appendChild(hdr);
+
+    ch.qs.forEach((q, qi) => {
+      gn++;
+      const delay = Math.min(qi * 40, 300);
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.id = 'card-'+ci+'-'+qi;
+      card.style.animationDelay = delay+'ms';
+
+      const choicesHTML = q.cs.map((c,i) => `
+        <div class="choice" ontouchstart="" onclick="pick(${ci},${qi},${i})">
+          <span class="c-lbl">${LBL[i]}</span>
+          <span class="c-txt">${c}</span>
+        </div>`).join('');
+
+      card.innerHTML = `
+        <div class="q-top">
+          <span class="q-num">Q ${gn}</span>
+          <span class="q-text">${q.q}</span>
+        </div>
+        <div class="choices">${choicesHTML}</div>
+        <div class="explain">
+          <span class="e-label">해설</span>
+          <b>정답 ${LBL[q.a]}</b> — ${q.e}
+        </div>`;
+      sec.appendChild(card);
+    });
+
+    areaEl.appendChild(sec);
+  });
+}
+
+function resetAll() {
+  state={}; done=0; cor=0; wro=0; reviewMode=false; curCh=0;
+  document.getElementById('score-screen').style.display = 'none';
+  document.getElementById('q-area').style.display = 'block';
+  upd(); build();
+  window.scrollTo(0,0);
+}
 </script>
+</body>
+</html>
