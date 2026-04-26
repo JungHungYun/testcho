@@ -1,69 +1,72 @@
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans);color:var(--color-text-primary)}
-.quiz-wrap{padding:1rem 0;max-width:680px}
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:12px}
-.title{font-size:18px;font-weight:500}
-.stat-row{display:flex;gap:8px}
-.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:6px 14px;font-size:13px;color:var(--color-text-secondary);white-space:nowrap}
-.stat b{color:var(--color-text-primary);font-weight:500}
-.progress-bar{width:100%;height:4px;background:var(--color-background-secondary);border-radius:2px;margin-bottom:1.5rem;overflow:hidden}
-.progress-fill{height:100%;background:#3949AB;border-radius:2px;transition:width 0.4s}
-.chapter-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem}
-.tab{padding:5px 12px;border-radius:20px;font-size:12px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font-sans);color:var(--color-text-primary);font-size:15px}
+.wrap{padding:12px 0}
+.top-bar{margin-bottom:12px}
+.title{font-size:17px;font-weight:500;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:10px}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 6px;text-align:center}
+.stat-val{font-size:18px;font-weight:500;display:block;line-height:1.2}
+.stat-lbl{font-size:11px;color:var(--color-text-secondary);display:block;margin-top:2px}
+.pbar{height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden;margin-bottom:12px}
+.pfill{height:100%;background:#3949AB;border-radius:2px;transition:width .4s}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:13px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;min-height:36px;display:flex;align-items:center}
 .tab.active{background:#1A237E;color:#fff;border-color:#1A237E}
-.tab:hover:not(.active){background:var(--color-background-secondary)}
-.chapter-label{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:1rem;padding-left:2px}
-.q-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-primary);padding:1.25rem;margin-bottom:12px;transition:border-color .2s}
+.ch-label{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:10px}
+.q-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);background:var(--color-background-primary);padding:14px;margin-bottom:10px}
 .q-card.answered{border-color:var(--color-border-secondary)}
-.q-header{display:flex;gap:10px;margin-bottom:1rem}
-.q-num{font-size:12px;font-weight:500;color:#5C6BC0;background:#E8EAF6;padding:2px 8px;border-radius:10px;white-space:nowrap;align-self:flex-start;margin-top:2px}
-.q-text{font-size:14px;line-height:1.6}
-.choices{display:flex;flex-direction:column;gap:6px}
-.choice{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);cursor:pointer;transition:all .15s;font-size:13px;line-height:1.5}
-.choice:hover:not(.locked){background:var(--color-background-secondary);border-color:var(--color-border-secondary)}
-.choice-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);min-width:18px;text-align:center;margin-top:1px}
+.q-top{display:flex;gap:8px;margin-bottom:12px;align-items:flex-start}
+.q-badge{font-size:11px;font-weight:500;color:#5C6BC0;background:#E8EAF6;padding:3px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.q-text{font-size:14px;line-height:1.55;color:var(--color-text-primary)}
+.choices{display:flex;flex-direction:column;gap:7px}
+.choice{display:flex;align-items:flex-start;gap:10px;padding:12px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);cursor:pointer;min-height:48px;transition:background .1s,border-color .1s}
+.choice:active:not(.locked){background:var(--color-background-secondary)}
+.c-lbl{font-size:12px;font-weight:500;color:var(--color-text-secondary);min-width:18px;flex-shrink:0;margin-top:1px}
+.c-txt{font-size:13px;line-height:1.5;color:var(--color-text-primary)}
 .choice.correct{background:#E8F5E9;border-color:#2E7D32}
-.choice.correct .choice-label{color:#2E7D32}
-.choice.correct .choice-text{color:#1B5E20;font-weight:500}
+.choice.correct .c-lbl{color:#2E7D32}
+.choice.correct .c-txt{color:#1B5E20;font-weight:500}
 .choice.wrong{background:#FFEBEE;border-color:#C62828}
-.choice.wrong .choice-label{color:#C62828}
-.choice.wrong .choice-text{color:#B71C1C}
-.choice.dimmed{opacity:.45}
-.explain{margin-top:10px;padding:10px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);border-left:3px solid #3949AB;font-size:12.5px;line-height:1.6;color:var(--color-text-secondary)}
+.choice.wrong .c-lbl{color:#C62828}
+.choice.wrong .c-txt{color:#B71C1C}
+.choice.dim{opacity:.4}
+.explain{margin-top:10px;padding:10px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);border-left:3px solid #3949AB;font-size:12.5px;line-height:1.6;color:var(--color-text-secondary);display:none}
 .explain b{color:#1A237E;font-weight:500}
-.score-banner{display:none;padding:1.5rem;border-radius:var(--border-radius-lg);background:var(--color-background-secondary);text-align:center;margin-bottom:1.5rem}
-.score-banner.visible{display:block}
-.score-big{font-size:36px;font-weight:500;color:#1A237E;margin-bottom:4px}
-.score-sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem}
-.reset-btn{padding:8px 20px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-size:13px;cursor:pointer}
-.reset-btn:hover{background:var(--color-background-secondary)}
-.all-tab-content{display:none}
-.all-tab-content.active{display:block}
+.chap-wrap{display:none}
+.chap-wrap.active{display:block}
+.score-banner{display:none;padding:20px 16px;border-radius:var(--border-radius-lg);background:var(--color-background-secondary);text-align:center;margin-bottom:12px}
+.score-banner.on{display:block}
+.score-big{font-size:40px;font-weight:500;color:#1A237E;line-height:1.1;margin-bottom:4px}
+.score-sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:14px;line-height:1.5}
+.reset-btn{padding:10px 24px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-size:14px;cursor:pointer;min-height:44px}
 </style>
 
-<div class="quiz-wrap">
-  <div class="header">
+<div class="wrap">
+  <div class="top-bar">
     <div class="title">심리학 객관식 문제집</div>
-    <div class="stat-row">
-      <div class="stat">푼 문제 <b id="s-done">0</b>/73</div>
-      <div class="stat">정답 <b id="s-cor">0</b></div>
-      <div class="stat">오답 <b id="s-wro">0</b></div>
+    <div class="stats">
+      <div class="stat"><span class="stat-val" id="s-done">0</span><span class="stat-lbl">푼 문제</span></div>
+      <div class="stat"><span class="stat-val" style="color:#2E7D32" id="s-cor">0</span><span class="stat-lbl">정답</span></div>
+      <div class="stat"><span class="stat-val" style="color:#C62828" id="s-wro">0</span><span class="stat-lbl">오답</span></div>
     </div>
+    <div class="pbar"><div class="pfill" id="prog" style="width:0%"></div></div>
   </div>
-  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+
   <div id="score-banner" class="score-banner">
-    <div class="score-big" id="score-pct"></div>
-    <div class="score-sub" id="score-msg"></div>
+    <div class="score-big" id="sc-pct"></div>
+    <div class="score-sub" id="sc-msg"></div>
     <button class="reset-btn" onclick="resetAll()">처음부터 다시 풀기</button>
   </div>
-  <div class="chapter-tabs" id="tabs"></div>
+
+  <div class="tabs" id="tabs"></div>
   <div id="chapters"></div>
 </div>
 
 <script>
-const QUIZZES = [
+const Q=[
   {ch:"🧠 심리학의 기초",qs:[
     {q:"심리학의 정의로 가장 적절한 것은?",cs:["인간의 뇌 구조와 신경계를 연구하는 학문","인간의 행동과 정신 과정을 과학적으로 연구하여 삶의 질을 향상시키는 학문","사회 집단의 행동 패턴을 분석하는 학문","철학적 사유를 통해 인간 본성을 탐구하는 학문"],a:1,e:"심리학은 '행동'과 '정신 과정(마음)' 두 가지를 과학적으로 연구하는 학문입니다."},
     {q:"심리학이 과학으로서 갖춰야 할 3가지 조건을 모두 올바르게 묶은 것은?",cs:["관찰 가능, 측정 가능, 반복 가능","관찰 가능, 예측 가능, 통제 가능","측정 가능, 수정 가능, 적용 가능","반복 가능, 검증 가능, 수량화 가능"],a:0,e:"심리학의 과학적 조건: 관찰 가능(Observable) + 측정 가능(Measurable) + 반복 가능(Replicable)"},
@@ -153,123 +156,117 @@ const QUIZZES = [
     {q:"'캐논-바드 이론'이 제임스-랑게 이론과 다른 점은?",cs:["인지 평가를 정서의 주요 요인으로 본다","생리적 각성과 정서 지각이 동시에 발생한다고 본다","신체 반응이 정서보다 먼저 발생한다고 본다","정서는 학습을 통해서만 형성된다고 본다"],a:1,e:"캐논-바드: 자극 → 생리적 각성과 정서 지각이 동시에 발생. 뇌(시상)에서 두 반응이 동시에 시작됩니다."},
     {q:"'샥터-싱어 이론'의 핵심 주장은?",cs:["신체 반응이 정서보다 먼저 발생한다","생리적 각성과 정서가 동시에 일어난다","생리적 각성 후 상황에 대한 인지 평가가 정서를 결정한다","인지 평가가 생리적 각성보다 먼저 일어난다"],a:2,e:"샥터-싱어: 자극 → 생리적 각성 → 상황을 인지적으로 평가 → 정서를 명명(이름 붙임). 2요인 이론이라고도 함."},
     {q:"'라자러스 이론'이 다른 정서 이론과 구별되는 핵심은?",cs:["신체 반응이 가장 먼저 일어난다","인지 평가(Cognitive Appraisal)가 생리적 각성에 선행한다","생리적 각성과 정서 지각이 동시에 발생한다","정서는 생리적 반응의 부산물이다"],a:1,e:"라자러스: 자극 → 인지 평가(먼저!) → 생리적 각성 + 정서 지각. 상황 해석(인지)이 정서를 결정한다고 봤습니다."},
-    {q:"동일한 생리적 각성이라도 상황 해석에 따라 다른 정서를 경험한다는 이론은?",cs:["제임스-랑게 이론","캐논-바드 이론","샥터-싱어 이론","라자러스 이론"],a:2,e:"샥터-싱어의 핵심: 동일한 생리적 각성(심장 빠름)도 상황(위험 vs 흥미로운 상대)에 따라 '공포' 또는 '설렘'으로 명명됩니다."},
+    {q:"동일한 생리적 각성이라도 상황 해석에 따라 다른 정서를 경험한다는 이론은?",cs:["제임스-랑게 이론","캐논-바드 이론","샥터-싱어 이론","라자러스 이론"],a:2,e:"샥터-싱어의 핵심: 동일한 생리적 각성(심장 빠름)도 상황에 따라 '공포' 또는 '설렘'으로 명명됩니다."},
     {q:"4가지 정서 이론 중 '인지 평가가 가장 먼저' 일어난다고 보는 이론은?",cs:["제임스-랑게 이론","캐논-바드 이론","샥터-싱어 이론","라자러스 이론"],a:3,e:"라자러스 이론만이 인지 평가가 생리적 각성보다 먼저 일어난다고 주장합니다."},
   ]},
 ];
 
-const labels = ['①','②','③','④'];
-let state = {};
-let answered = 0, correct = 0, wrong = 0;
-const TOTAL = QUIZZES.reduce((s,c)=>s+c.qs.length,0);
+const LBL=['①','②','③','④'];
+const TOTAL=Q.reduce((s,c)=>s+c.qs.length,0);
+let st={},done=0,cor=0,wro=0;
 
-function updateStats(){
-  document.getElementById('s-done').textContent = answered;
-  document.getElementById('s-cor').textContent = correct;
-  document.getElementById('s-wro').textContent = wrong;
-  document.getElementById('prog').style.width = Math.round(answered/TOTAL*100)+'%';
-  if(answered===TOTAL){
-    const pct = Math.round(correct/TOTAL*100);
-    document.getElementById('score-pct').textContent = pct+'점';
-    const msgs = [[90,'완벽해요! 시험 걱정 없겠는데요?'],[70,'잘 하셨어요! 틀린 문제만 복습하면 완벽!'],[50,'절반 이상! 조금 더 복습하면 좋을 것 같아요.'],[0,'다시 한 번 도전해봐요! 할 수 있어요!']];
-    document.getElementById('score-msg').textContent = msgs.find(([t])=>pct>=t)[1];
-    document.getElementById('score-banner').classList.add('visible');
-    document.getElementById('score-banner').scrollIntoView({behavior:'smooth',block:'center'});
+function upd(){
+  document.getElementById('s-done').textContent=done;
+  document.getElementById('s-cor').textContent=cor;
+  document.getElementById('s-wro').textContent=wro;
+  document.getElementById('prog').style.width=Math.round(done/TOTAL*100)+'%';
+  if(done===TOTAL){
+    const pct=Math.round(cor/TOTAL*100);
+    document.getElementById('sc-pct').textContent=pct+'점';
+    const msgs=[[90,'완벽해요! 시험 걱정 없겠어요!'],[70,'잘 하셨어요! 틀린 문제만 복습하면 완벽!'],[50,'절반 이상! 조금 더 복습해봐요.'],[0,'다시 한 번 도전해봐요! 할 수 있어요!']];
+    document.getElementById('sc-msg').textContent=msgs.find(([t])=>pct>=t)[1];
+    document.getElementById('score-banner').classList.add('on');
   }
 }
 
-function pick(chIdx, qIdx, cIdx){
-  const key = `${chIdx}-${qIdx}`;
-  if(state[key]!==undefined) return;
-  state[key] = cIdx;
-  answered++;
-  const q = QUIZZES[chIdx].qs[qIdx];
-  if(cIdx===q.a) correct++; else wrong++;
-  updateStats();
-  renderQuestion(chIdx, qIdx);
+function pick(ci,qi,sel){
+  const k=ci+'-'+qi;
+  if(st[k]!==undefined)return;
+  st[k]=sel;
+  done++;
+  if(sel===Q[ci].qs[qi].a)cor++;else wro++;
+  upd();
+  render(ci,qi);
 }
 
-function renderQuestion(chIdx, qIdx){
-  const key = `${chIdx}-${qIdx}`;
-  const card = document.getElementById(`card-${chIdx}-${qIdx}`);
-  if(!card) return;
-  const q = QUIZZES[chIdx].qs[qIdx];
-  const picked = state[key];
-  const answered = picked !== undefined;
-  const choicesEl = card.querySelectorAll('.choice');
-  choicesEl.forEach((el, i)=>{
-    el.classList.remove('correct','wrong','dimmed');
-    const lbl = el.querySelector('.choice-label');
-    const txt = el.querySelector('.choice-text');
-    if(answered){
-      if(i===q.a){ el.classList.add('correct'); lbl.style.color='#2E7D32'; txt.style.color='#1B5E20'; txt.style.fontWeight='500'; }
-      else if(i===picked){ el.classList.add('wrong'); lbl.style.color='#C62828'; txt.style.color='#B71C1C'; }
-      else { el.classList.add('dimmed'); }
+function render(ci,qi){
+  const k=ci+'-'+qi;
+  const card=document.getElementById('c-'+k);
+  if(!card)return;
+  const q=Q[ci].qs[qi];
+  const picked=st[k];
+  const ans=picked!==undefined;
+  card.querySelectorAll('.choice').forEach((el,i)=>{
+    el.classList.remove('correct','wrong','dim');
+    if(ans){
+      if(i===q.a)el.classList.add('correct');
+      else if(i===picked)el.classList.add('wrong');
+      else el.classList.add('dim');
       el.style.cursor='default';
     }
   });
-  const expEl = card.querySelector('.explain');
-  if(expEl) expEl.style.display = answered ? 'block' : 'none';
-  card.classList.toggle('answered', answered);
-}
-
-function buildUI(){
-  const tabsEl = document.getElementById('tabs');
-  const chaptersEl = document.getElementById('chapters');
-  tabsEl.innerHTML='';
-  chaptersEl.innerHTML='';
-
-  let globalN = 0;
-  QUIZZES.forEach((ch, ci)=>{
-    const tabBtn = document.createElement('button');
-    tabBtn.className = 'tab' + (ci===0?' active':'');
-    tabBtn.textContent = ch.ch;
-    tabBtn.onclick = ()=>switchTab(ci);
-    tabBtn.id = `tab-${ci}`;
-    tabsEl.appendChild(tabBtn);
-
-    const div = document.createElement('div');
-    div.className = 'all-tab-content' + (ci===0?' active':'');
-    div.id = `chap-${ci}`;
-    div.innerHTML = `<div class="chapter-label">${ch.ch} — ${ch.qs.length}문항</div>`;
-
-    ch.qs.forEach((q, qi)=>{
-      globalN++;
-      const card = document.createElement('div');
-      card.className = 'q-card';
-      card.id = `card-${ci}-${qi}`;
-      let choicesHTML = q.cs.map((c,i)=>`
-        <div class="choice" onclick="pick(${ci},${qi},${i})" id="choice-${ci}-${qi}-${i}">
-          <span class="choice-label">${labels[i]}</span>
-          <span class="choice-text">${c}</span>
-        </div>`).join('');
-      card.innerHTML = `
-        <div class="q-header">
-          <span class="q-num">Q${globalN}</span>
-          <span class="q-text">${q.q}</span>
-        </div>
-        <div class="choices">${choicesHTML}</div>
-        <div class="explain" style="display:none"><b>정답 ${labels[q.a]}</b> &nbsp; ${q.e}</div>`;
-      div.appendChild(card);
-    });
-    chaptersEl.appendChild(div);
-  });
+  const ex=card.querySelector('.explain');
+  if(ex)ex.style.display=ans?'block':'none';
+  card.classList.toggle('answered',ans);
 }
 
 function switchTab(ci){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.all-tab-content').forEach(t=>t.classList.remove('active'));
-  document.getElementById(`tab-${ci}`).classList.add('active');
-  document.getElementById(`chap-${ci}`).classList.add('active');
+  document.querySelectorAll('.chap-wrap').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+ci).classList.add('active');
+  document.getElementById('ch-'+ci).classList.add('active');
+}
+
+function build(){
+  const tabsEl=document.getElementById('tabs');
+  const chapEl=document.getElementById('chapters');
+  tabsEl.innerHTML='';chapEl.innerHTML='';
+  let gn=0;
+  Q.forEach((ch,ci)=>{
+    const tb=document.createElement('button');
+    tb.className='tab'+(ci===0?' active':'');
+    tb.textContent=ch.ch;
+    tb.id='tab-'+ci;
+    tb.onclick=()=>switchTab(ci);
+    tabsEl.appendChild(tb);
+
+    const wrap=document.createElement('div');
+    wrap.className='chap-wrap'+(ci===0?' active':'');
+    wrap.id='ch-'+ci;
+    const lbl=document.createElement('div');
+    lbl.className='ch-label';
+    lbl.textContent=ch.ch+' — '+ch.qs.length+'문항';
+    wrap.appendChild(lbl);
+
+    ch.qs.forEach((q,qi)=>{
+      gn++;
+      const card=document.createElement('div');
+      card.className='q-card';
+      card.id='c-'+ci+'-'+qi;
+      const choicesHTML=q.cs.map((c,i)=>
+        `<div class="choice" ontouchstart="" onclick="pick(${ci},${qi},${i})">
+          <span class="c-lbl">${LBL[i]}</span>
+          <span class="c-txt">${c}</span>
+        </div>`).join('');
+      card.innerHTML=`
+        <div class="q-top">
+          <span class="q-badge">Q${gn}</span>
+          <span class="q-text">${q.q}</span>
+        </div>
+        <div class="choices">${choicesHTML}</div>
+        <div class="explain"><b>정답 ${LBL[q.a]}</b> &nbsp;${q.e}</div>`;
+      wrap.appendChild(card);
+    });
+    chapEl.appendChild(wrap);
+  });
 }
 
 function resetAll(){
-  state={};answered=0;correct=0;wrong=0;
-  document.getElementById('score-banner').classList.remove('visible');
-  updateStats();
-  buildUI();
+  st={};done=0;cor=0;wro=0;
+  document.getElementById('score-banner').classList.remove('on');
+  upd();build();
+  window.scrollTo(0,0);
 }
 
-buildUI();
-updateStats();
+build();upd();
 </script>
